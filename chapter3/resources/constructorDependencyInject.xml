@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  
+xmlns="http://www.springframework.org/schema/beans"  
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+xmlns:context="http://www.springframework.org/schema/context"  
+xsi:schemaLocation="  
+http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+http://www.springframework.org/schema/context                http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+<!-- 通过构造器方式进行注入 -->
+<bean id="byIndex" class="cn.javass.spring.chapter3.helloworld.HelloImpl3">
+<constructor-arg index="0" value="Hello World!"/>
+<constructor-arg index="1" value="1"/>
+</bean>
+<!-- 通过构造器参数类型方式依赖注入 -->
+<bean id="byType" class="cn.javass.spring.chapter3.helloworld.HelloImpl3">
+<constructor-arg type="java.lang.String" value="Hello World!"/>
+<constructor-arg type="java.lang.Integer" value="1"/>
+</bean>
+<!-- 通过构造参数名称方式依赖注入 -->
+<bean id="byName" class="cn.javass.spring.chapter3.helloworld.HelloImpl3">
+<constructor-arg name="message" value="Hello World!"/>
+<constructor-arg name="index" value="1"/>
+</bean>
+<bean id="bean" class="cn.javass.spring.chapter3.helloworld.HelloImpl4">
+<property name="message" value="Hello World"/>
+<property name="index">
+    <value>1</value>
+</property>
+<!-- <span class="Apple-style-span" style="font-size: 14px; white-space: normal; backgroud-color: #ffffff;"></span> -->
+</bean>
+
+<bean id="bean2" class="cn.javass.spring.chapter3.helloworld.BooleanTestBean">
+    <property name="success" value="on"/>
+</bean>
+<bean id="bean3" class="cn.javass.spring.chapter3.helloworld.BooleanTestBean">
+    <property name="success" value="yes"/>
+</bean>
+<bean id="bean4" class="cn.javass.spring.chapter3.helloworld.BooleanTestBean">
+    <property name="success" value="1"/>
+</bean>
+
+<bean id="id1" class="java.lang.String">
+<constructor-arg index="0" value="test"/>
+</bean>
+<bean id="id2" class="java.lang.String">
+    <constructor-arg index="0" value="test"/>
+</bean>
+
+<bean id="idRefBean1" class="cn.javass.spring.chapter3.helloworld.IdrefTestBean">
+    <property name="id"><idref bean="id1"/></property>
+</bean>
+<bean id="idRefBean2" class="cn.javass.spring.chapter3.helloworld.IdrefTestBean">
+    <property name="id"><idref local="id2"/></property>
+</bean>
+
+<bean id="listBean" class="cn.javass.spring.chapter3.helloworld.ListTestBean">
+    <property name="values">
+        <list>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+        </list>
+    </property>
+</bean>
+
+<bean id="setBean" class="cn.javass.spring.chapter3.helloworld.SetTestInject">
+    <property name="values">
+        <set>
+           <value>1</value>
+           <value>2</value>
+           <value>3</value>
+        </set>
+    </property>
+</bean>
+
+<bean id="collectionBean" class="cn.javass.spring.chapter3.helloworld.CollectionTestBean">
+    <property name="values">
+        <list>
+            <value>"i"</value>
+            <value>"am"</value>
+            <value>"nzb"</value>
+        </list>
+    </property>
+</bean>
+
+<bean id="arrayBean" class="cn.javass.spring.chapter3.helloworld.ArrayTestInject">
+    <property name="array">
+        <array>
+          <value>1</value>
+          <value>2</value>
+        </array>
+    </property>
+    <property name="array2">
+        <array>
+          <array>
+            <value>1</value>
+            <value>2</value>
+          </array>
+          <array>
+            <value>11</value>
+            <value>22</value>
+          </array>
+        </array>
+    </property>
+</bean>
+
+<bean id="mapBean" class="cn.javass.spring.chapter3.helloworld.MapTestInject">
+    <property name="values">
+        <map key-type="java.lang.Integer"
+             value-type="java.lang.String">
+             <entry>
+                 <key><value>1</value></key>
+                 <value>"Ivan"</value>
+             </entry>
+             <entry key="2" value="Nie"></entry>
+        </map>
+    </property>
+</bean>
+
+<bean id="propertiesBean" class="cn.javass.spring.chapter3.helloworld.PropertiesTestInject">
+    <property name="values">
+        <props merge="default">
+          <prop key="1">1sss</prop>
+          <prop key="2">2dddd</prop>
+        </props>
+    </property>
+</bean>
+<!-- 定义依赖bean -->
+<bean id="helloApi" class="cn.javass.spring.chapter3.helloworld.HelloImpl3"/>
+<!-- 通过构造器注入 -->
+<bean id="beanInject1" class="cn.javass.spring.chapter3.helloworld.HelloApiDecorator">
+<constructor-arg index="0" ref="helloApi"/>
+</bean>
+<!-- 通过构造器注入 -->
+<bean id="beanInject2" class="cn.javass.spring.chapter3.helloworld.HelloApiDecorator">
+<property name="helloApi"><ref bean="helloApi"/></property>
+</bean>
+
+<bean id="internalTestBean" class="cn.javass.spring.chapter3.helloworld.HelloApiDecorator">
+    <property name="helloiApi">
+        <bean id="hellioApi" class="cn.javass.spring.chapter3.helloworld.HelloImpl3"/>
+    </property>
+</bean>
+
+<bean id="c" class="cn.javass.spring.chapter3.helloworld.NavigationC"/>
+<bean id="b" class="cn.javass.spring.chapter3.helloworld.NavigationB">
+    <property name="list"><list></list></property>
+    <property name="map"><map></map></property>
+    <property name="properties"><props></props></property>
+</bean>
+
+<bean id="a" class="cn.javass.spring.chapter3.helloworld.NavigationA">
+<!-- 首先注入navigationB 确保它非空 -->    
+<property name="navaigationB" ref="b"/>
+<!-- 对象导航图注入 -->
+<property name="navaigationB.navigationC" ref="c"/>
+<!-- 注入列表数据类型数据 -->
+<property name="navaigationB.list[0]" ref="c"/>
+<!-- 注入map类型的数据 -->
+<property name="navaigationB.map[key]" ref="c"/>
+<!-- 注入properties类型的数据 -->
+<property name="navaigationB.properties[0]" ref="c"/>
+<!-- 注入properties类型的数据 -->
+<property name="navaigationB.properties[1]" ref="c"/>
+<!-- 注入数组类型的数据 -->
+<property name="navaigationB.array[0]" ref="c"/>
+</bean>
+
+</beans>
